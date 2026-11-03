@@ -1,0 +1,13 @@
+{
+  "name": "timeline",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Your life as an ink handscroll. Three ways in, you choose how much you share. Llama runs on your device.",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node server/server.js",
+    "build": "python3 build.py",
+    "test": "node --test test/*.test.js"
+  }
+}

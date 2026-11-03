@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: timeline
+    runtime: node
+    plan: free
+    buildCommand: "true"           # the page is prebuilt in web/; no npm install needed
+    startCommand: node server/server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: TRUST_PROXY           # Render sits behind one proxy
+        value: "1"
+      - key: MODEL_API_KEY         # optional: your Meta Model API key turns on the opt-in Muse writer
+        sync: false
+      - key: MUSE_MODEL
+        value: muse-spark-1.3

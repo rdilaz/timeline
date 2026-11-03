@@ -1,0 +1,109 @@
+{
+ "tiers": {
+  "大吉": {
+   "key": "dai",
+   "en": "Great blessing",
+   "w": 8
+  },
+  "中吉": {
+   "key": "chu",
+   "en": "Middle blessing",
+   "w": 17
+  },
+  "吉": {
+   "key": "kichi",
+   "en": "Blessing",
+   "w": 25
+  },
+  "小吉": {
+   "key": "sho",
+   "en": "Small blessing",
+   "w": 20
+  },
+  "末吉": {
+   "key": "sue",
+   "en": "Blessing yet to come",
+   "w": 18
+  },
+  "凶": {
+   "key": "kyo",
+   "en": "Misfortune, for now",
+   "w": 10
+  },
+  "大凶": {
+   "key": "daikyo",
+   "en": "Great misfortune, for now",
+   "w": 2
+  }
+ },
+ "modes": [
+  {
+   "key": "ink",
+   "kanji": "墨",
+   "name": "Ink scroll",
+   "state": "now"
+  },
+  {
+   "key": "cosmos",
+   "kanji": "宙",
+   "name": "Cosmos",
+   "state": "preview"
+  },
+  {
+   "key": "lunisolar",
+   "kanji": "暦",
+   "name": "Lunisolar",
+   "state": "later"
+  },
+  {
+   "key": "wakaremichi",
+   "kanji": "岐",
+   "name": "Wakaremichi",
+   "state": "later"
+  },
+  {
+   "key": "sound",
+   "kanji": "音",
+   "name": "Sound",
+   "state": "later"
+  },
+  {
+   "key": "lineage",
+   "kanji": "系",
+   "name": "Lineage",
+   "state": "later"
+  }
+ ],
+ "cosmos": [
+  {
+   "when": "13.8 billion years ago",
+   "title": "The Big Bang",
+   "line": "Everything begins at one point and starts to cool."
+  },
+  {
+   "when": "13.6 billion years ago",
+   "title": "First stars",
+   "line": "Light switches on and forges the first heavy elements."
+  },
+  {
+   "when": "3.7 billion years ago",
+   "title": "Life on Earth",
+   "line": "Chemistry starts copying itself."
+  },
+  {
+   "when": "300,000 years ago",
+   "title": "Humans",
+   "line": "Someone looks up and starts counting the sky."
+  },
+  {
+   "when": "About 4,000 years ago",
+   "title": "Astrology, then tarot",
+   "line": "Babylonian sky omens, and much later tarot cards in 15th-century Italy."
+  },
+  {
+   "when": "Now",
+   "title": "You",
+   "line": "Place yourself in the sky and read your chart."
+  }
+ ]
+}

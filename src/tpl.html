@@ -1,0 +1,45 @@
+
+  <section class="tpl tbasic" id="tplBasic" aria-label="Timeline">
+    <header class="bh">
+      <div class="bmark"><span class="bdotmark" aria-hidden="true"></span>Timeline</div>
+      <div class="bact"><button class="bbtn" type="button" data-act="tplpick">Templates</button><button class="bbtn pri" type="button" data-act="maker">Make yours</button></div>
+    </header>
+    <div class="bscroll" id="bScroll">
+      <div class="bhero">
+        <h1>Your life on one page.</h1>
+        <p class="blead">Answer eight quick questions, try the apps preview, or write a few sentences. You decide how much you share.</p>
+        <div class="brow"><button class="bbtn pri lg" type="button" data-act="maker">Make my timeline</button><button class="bbtn lg" type="button" data-act="bexample">See an example</button></div>
+        <ul class="bshare" aria-label="Three ways to start">
+          <li><b>Quiz</b><span>Taps only. No AI.</span><i class="lv l1" aria-hidden="true"></i></li>
+          <li><b>Your apps</b><span>Preview on sample data.</span><i class="lv l2" aria-hidden="true"></i></li>
+          <li><b>Your words</b><span>Llama runs on your device.</span><i class="lv l3" aria-hidden="true"></i></li>
+        </ul>
+      </div>
+      <div class="bwho" id="bWho"></div>
+      <ol class="blist" id="bList"></ol>
+      <footer class="bfoot"><p>Same timeline, other looks:</p><div class="brow"><button class="bbtn" type="button" data-tpl="ink">Ink scroll</button><button class="bbtn" type="button" data-tpl="cosmos">Cosmos</button></div><p class="bsmall">Built with Llama. Your timeline lives only in this browser.</p></footer>
+    </div>
+  </section>
+
+  <section class="tpl tcosmos" id="tplCosmos" aria-label="Timeline, Cosmos template" hidden>
+    <canvas id="cosCanvas" aria-hidden="true"></canvas>
+    <header class="bh dark">
+      <div class="bmark"><span class="bdotmark" aria-hidden="true"></span>Cosmos</div>
+      <div class="bact"><button class="bbtn" type="button" data-act="tplpick">Templates</button><button class="bbtn pri" type="button" data-act="maker">Make yours</button></div>
+    </header>
+    <p class="chint" id="cHint">Each star is a moment. The bright one is today. Rings are plans.</p>
+    <div class="cpanel" id="cPanel" aria-live="polite"></div>
+    <nav class="cnav" aria-label="Move between stars"><button class="bbtn" type="button" data-cos="-1">← Back</button><span id="cCount"></span><button class="bbtn" type="button" data-cos="1">Next →</button></nav>
+  </section>
+
+  <div class="veil tplveil" id="tplVeil" hidden>
+    <div class="sheet tplsheet" role="dialog" aria-modal="true" aria-labelledby="tpl-h">
+      <div class="mkhead"><h2 id="tpl-h">Choose a template</h2><button class="ghost" type="button" data-act="closeveil">Close</button></div>
+      <p class="tplsub">Same timeline, three looks. Switch any time.</p>
+      <div class="tplgrid">
+        <button class="tplcard" type="button" data-tpl="basic"><span class="th th-basic" aria-hidden="true"><i></i><i></i><i></i><i></i></span><b>Basic</b><span>Clean and simple. Read it in seconds.</span></button>
+        <button class="tplcard" type="button" data-tpl="ink"><span class="th th-ink" aria-hidden="true"><i></i></span><b>Ink scroll</b><span>A brush stroke you travel along, with music and fortunes.</span></button>
+        <button class="tplcard" type="button" data-tpl="cosmos"><span class="th th-cos" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><b>Cosmos</b><span>Your moments as stars, spiralling out to today.</span></button>
+      </div>
+    </div>
+  </div>

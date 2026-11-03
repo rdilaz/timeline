@@ -1,0 +1,4 @@
+node_modules/
+rust/ink/target/
+dist/
+.env

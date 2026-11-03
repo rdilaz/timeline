@@ -1,0 +1,146 @@
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="bleed" x="-10%" y="-10%" width="120%" height="120%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="3" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="halo" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.6"/></filter>
+</svg>
+
+<div class="app" id="app">
+  <header class="topbar">
+    <button class="tbtn edit" type="button" data-act="edit" aria-label="Edit this moment"><span class="ck" aria-hidden="true">筆</span>Edit</button>
+    <div class="grp">
+      <button class="tbtn fs" id="fsBtn" type="button" data-act="fullscreen" aria-pressed="false" aria-label="Full screen (F)" title="Full screen (F)"><svg class="fsi" viewBox="0 0 20 20" aria-hidden="true"><path d="M2 7V2h5M13 2h5v5M18 13v5h-5M7 18H2v-5"/></svg><span class="lg">Full screen</span><span class="sm">Full</span></button>
+      <button class="tbtn music" id="musicBtn" type="button" data-act="music" aria-pressed="false" aria-label="Play music"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="ck" aria-hidden="true">楽</span>Music</button>
+      <button class="tbtn sound" type="button" data-act="settings"><span class="ck" aria-hidden="true">音</span>Sound</button>
+    </div>
+  </header>
+
+  <div class="region mist" aria-hidden="true"><canvas id="far"></canvas><div class="fog" id="fog"></div></div>
+  <main class="region track" id="track" tabindex="0" aria-label="Life timeline. Use the arrow keys, Back and Next, or swipe."></main>
+
+  <section class="region view" id="lifev" hidden aria-labelledby="life-h">
+    <div class="vwrap">
+      <div class="vhead"><div class="kj" id="lifeKj"></div><p class="when" id="lifeWhen"></p></div>
+      <h2 class="vline" id="life-h"></h2>
+      <p class="vdetail" id="lifeDetail"></p>
+      <div class="crow" style="margin-top:14px">
+        <button class="chip primary" type="button" data-act="play"><b aria-hidden="true">映</b>Play the scroll</button>
+        <div class="seg" role="group" aria-label="Mode"><button type="button" aria-pressed="true" data-act="noop">Ink scroll</button><button type="button" aria-pressed="false" data-act="cosmos">Cosmos preview</button></div>
+      </div>
+      <div class="ovlist" id="ovlist"><canvas id="ovc" aria-hidden="true"></canvas><ol id="ovmarks"></ol></div>
+      <p class="credits" id="credits1"></p>
+    </div>
+  </section>
+
+  <section class="region view" id="todayv" hidden aria-labelledby="today-h">
+    <div class="vwrap">
+      <div class="vhead"><div class="kj" id="todayKj"></div><p class="when" id="todayWhen"></p></div>
+      <h2 class="vline" id="today-h">Today</h2>
+      <ol class="todos" id="todos"></ol>
+      <form class="addf" id="addf">
+        <label class="sr" for="addt">New to-do</label>
+        <input id="addt" type="text" maxlength="60" placeholder="Add a to-do" autocomplete="off">
+        <button class="seal-btn" type="submit">Add</button>
+      </form>
+      <button class="txt-btn" type="button" data-act="clear">Clear finished</button>
+    </div>
+  </section>
+
+  <section class="region view cosmos" id="cosmosv" hidden aria-labelledby="cos-h">
+    <canvas class="stars" id="stars" aria-hidden="true"></canvas>
+    <div class="vwrap">
+      <p class="eyebrow">宙 · Mode preview · Coming soon</p>
+      <h2 id="cos-h">Cosmos</h2>
+      <p class="vdetail">Your life placed inside 13.8 billion years. Science first, then the long history of reading the sky, then you and your chart.</p>
+      <ol class="cos-list" id="cosList"></ol>
+      <div class="crow"><button class="chip" type="button" data-act="inkmode"><b aria-hidden="true">墨</b>Back to the ink scroll</button></div>
+    </div>
+  </section>
+
+  <div class="strip" id="strip" hidden>
+    <div class="pill" id="focus" hidden role="timer" aria-live="off">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle class="bg" cx="20" cy="20" r="16"/><circle class="fg" id="focusArc" cx="20" cy="20" r="16" pathLength="100"/></svg>
+      <span><span class="ft" id="focusT">00:00</span><br><span class="fl" id="focusL"></span></span>
+      <button type="button" data-act="stopfocus">Stop</button>
+    </div>
+    <div class="pill" id="playBox" hidden><span class="pdot" aria-hidden="true"></span><span class="ptxt">Playing the scroll</span><button type="button" data-act="playstop">Pause</button></div>
+  </div>
+
+  <nav class="zoom" id="zoom" aria-label="Navigation">
+    <button type="button" class="step" id="prevBtn" data-act="prev" aria-label="Back to the previous moment"><svg viewBox="0 0 24 16" aria-hidden="true"><path d="M21 8 H4 M9 3 L4 8 L9 13"/></svg><span class="ze w">Back</span></button>
+    <button type="button" data-view="life"><span class="zk w" aria-hidden="true">生涯</span><span class="ze w">Whole life</span><svg class="under" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true"><path pathLength="100" d="M2 5 C 30 2, 70 7, 98 3"/></svg></button>
+    <button type="button" data-view="scroll" aria-current="true"><span class="zk w" aria-hidden="true">年譜</span><span class="ze w">Timeline</span><svg class="under" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true"><path pathLength="100" d="M2 5 C 30 2, 70 7, 98 3"/></svg></button>
+    <button type="button" data-view="today" id="navToday"><span class="zk w" aria-hidden="true">今日</span><span class="ze w">Today</span><span class="badge" id="badge" hidden></span><svg class="under" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true"><path pathLength="100" d="M2 5 C 30 2, 70 7, 98 3"/></svg></button>
+    <button type="button" class="step" id="nextBtn" data-act="next" aria-label="Next moment"><span class="ze w">Next</span><svg viewBox="0 0 24 16" aria-hidden="true"><path d="M3 8 H20 M15 3 L20 8 L15 13"/></svg></button>
+  </nav>
+  <p class="sr" id="live" aria-live="polite"></p>
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <div class="veil" id="soundVeil" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sound-h">
+      <h2 id="sound-h">Sound, motion and modes</h2>
+      <h3 class="sh">Music</h3>
+      <p class="status" id="nowPlaying">Music is off</p>
+      <div class="row"><button class="seal-btn" type="button" id="musicPlay" data-act="music">Play music</button></div>
+      <fieldset><legend>Mood</legend><div class="chips col" id="moods"></div></fieldset>
+      <label for="musicVol">Music volume</label><input type="range" id="musicVol" min="0" max="100" step="1">
+      <h3 class="sh">Sound effects</h3>
+      <div class="row"><button class="ghost" type="button" id="sfxBtn" data-act="sfx" aria-pressed="true">Sound effects on</button></div>
+      <label for="sfxVol">Effects volume</label><input type="range" id="sfxVol" min="0" max="100" step="1">
+      <h3 class="sh">Motion</h3>
+      <fieldset><legend class="sr">Motion</legend><div class="chips">
+        <label><input type="radio" name="motion" value="full"> Full drawing</label>
+        <label><input type="radio" name="motion" value="reduced"> Reduced motion, no drawing animation</label>
+      </div></fieldset>
+      <h3 class="sh">Modes</h3>
+      <ul class="modes-list" id="modesList"></ul>
+      <p class="credits" id="credits2"></p>
+      <div class="row"><button class="ghost" type="button" data-act="closeveil">Close</button></div>
+    </div>
+  </div>
+
+  <div class="veil" id="bookVeil" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="book-h">
+      <h2 id="book-h">Slip book</h2>
+      <ul class="bstats" id="bstats"></ul>
+      <ul class="book" id="book"></ul>
+      <div class="row"><button class="ghost" type="button" data-act="closeveil">Close</button></div>
+    </div>
+  </div>
+
+  <div class="veil" id="editVeil" hidden>
+    <form class="sheet" id="ef" role="dialog" aria-modal="true" aria-labelledby="edit-h">
+      <h2 id="edit-h">Edit this moment</h2>
+      <label for="e-when">When</label><input type="text" id="e-when" maxlength="28">
+      <label for="e-kanji">Kanji, one or two</label><input type="text" id="e-kanji" maxlength="2">
+      <label for="e-line">One line</label><input type="text" id="e-line" maxlength="70">
+      <label for="e-detail">Short paragraph</label><textarea id="e-detail" maxlength="260" rows="3"></textarea>
+      <fieldset><legend>Splatter</legend><div class="chips">
+        <label><input type="radio" name="splat" id="sp-none" value="none"> None</label>
+        <label><input type="radio" name="splat" id="sp-black" value="black"> Sumi</label>
+        <label><input type="radio" name="splat" id="sp-red" value="red"> Vermilion</label>
+      </div></fieldset>
+      <div class="row">
+        <button class="seal-btn" type="submit">Save</button>
+        <button class="ghost" type="button" data-act="addafter">Add a moment after</button>
+        <button class="ghost warn" type="button" data-act="remove" id="removeBtn">Remove</button>
+      </div>
+      <div class="row">
+        <button class="ghost" type="button" data-act="copy">Copy timeline data</button>
+        <button class="ghost warn" type="button" data-act="reset">Back to first draft</button>
+        <button class="ghost" type="button" data-act="closeveil">Close</button>
+      </div>
+      <p class="status" id="estatus" aria-live="polite"></p>
+    </form>
+  </div>
+
+  <div class="veil slipveil" id="slipVeil" hidden>
+    <div class="rays" id="rays"></div>
+    <canvas id="fxBack"></canvas>
+    <div class="flash" id="flash"></div>
+    <article class="slip" id="slip" aria-live="polite"></article>
+    <canvas id="fxFront"></canvas>
+    <div class="slipbtns" id="slipBtns"></div>
+  </div>
+</div>
