@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <sub>Built with Meta Llama&nbsp;&nbsp;&middot;&nbsp;&nbsp;Runs on your device&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="LICENSE">MIT License</a></sub>
+  <sub><a href="https://timeline-11qo.onrender.com">Open Timeline</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;Built with Meta Llama&nbsp;&nbsp;&middot;&nbsp;&nbsp;Runs on your device&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="LICENSE">MIT License</a></sub>
 </p>
 
 <br>
