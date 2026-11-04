@@ -116,7 +116,7 @@ def page(hosted):
         head = '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n' + head + '<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%E5%A2%A8%3C/text%3E%3C/svg%3E">\n'
     data_tag = '<script type="application/json" id="timeline-data">\n' + json.dumps(d, ensure_ascii=False, indent=1).replace("</", "<\\/") + "\n</script>\n"
     html = (head + data_tag + "<style>\n" + style + "\n</style>\n" + ("</head>\n<body>\n" if hosted else "") + body() + "\n"
-            "<script>\n" + S("guard.js") + "\n</script>\n<script>\n" + S("gen.js") + "\n</script>\n"
+            "<script>\n" + S("demo.js") + "\n</script>\n<script>\n" + S("guard.js") + "\n</script>\n<script>\n" + S("gen.js") + "\n</script>\n"
             "<script>\n(function(){\n" + app_js(hosted) + "\n})();\n</script>\n" + ("</body>\n</html>\n" if hosted else ""))
     return html
 
