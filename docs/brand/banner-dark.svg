@@ -4,7 +4,9 @@
 <radialGradient id="bgdark" cx="72%" cy="45%" r="85%"><stop offset="0" stop-color="#0b1230"/><stop offset="1" stop-color="#05070f"/></radialGradient>
 <radialGradient id="glowdark"><stop offset="0" stop-color="#f3d27a" stop-opacity=".55"/><stop offset="1" stop-color="#f3d27a" stop-opacity="0"/></radialGradient>
 <radialGradient id="softdark"><stop offset="0" stop-color="#f4f1ea" stop-opacity=".28"/><stop offset="1" stop-color="#f4f1ea" stop-opacity="0"/></radialGradient>
+<clipPath id="clipdark"><rect width="1280" height="440" rx="28"/></clipPath>
 </defs>
+<g clip-path="url(#clipdark)">
 <rect width="1280" height="440" fill="url(#bgdark)"/>
 <circle cx="414.5" cy="66.4" r="0.6" fill="#f4f1ea" opacity="0.14"><animate attributeName="opacity" values="0.14;0.03;0.14" dur="5.1s" repeatCount="indefinite"/></circle>
 <circle cx="468.1" cy="25.5" r="0.8" fill="#f4f1ea" opacity="0.13"></circle>
@@ -167,4 +169,4 @@
 <text x="96" y="236" font-family="TS,'Instrument Serif','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif" font-size="112" fill="#f4f1ea" letter-spacing="-1">Timeline</text>
 <line x1="100" y1="276" x2="148" y2="276" stroke="#f3d27a" stroke-width="1.5"/>
 <text x="100" y="312" font-family="TA,'Inter','Helvetica Neue',Helvetica,Arial,sans-serif" font-size="15" fill="#9aa3c2" letter-spacing="5.5">YOUR LIFE, ON ONE PAGE</text>
-</svg>
+</g></svg>
