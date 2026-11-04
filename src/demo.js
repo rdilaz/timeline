@@ -28,10 +28,10 @@ const css=`
 #dx-cap{position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(8px);z-index:2147483646;max-width:min(980px,86vw);text-align:center;opacity:0;transition:opacity .7s ease,transform .7s ease;pointer-events:none}
 #dx-cap.on{opacity:1;transform:translateX(-50%) translateY(0)}
 #dx-cap .l{display:inline-block;padding:12px 22px;border-radius:14px;background:rgba(10,12,22,.74);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#f4f1ea;font:400 25px/1.35 'Instrument Serif',Georgia,serif;box-shadow:0 10px 40px rgba(0,0,0,.25)}
-#dx-cap .s{display:block;margin-top:8px;color:rgba(244,241,234,.8);font:500 12.5px/1.4 'Instrument Sans',Helvetica,Arial,sans-serif;letter-spacing:.04em;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+#dx-cap .s{display:block;margin-top:6px;color:rgba(244,241,234,.72);font:500 12px/1.4 'Instrument Sans',Helvetica,Arial,sans-serif;letter-spacing:.03em}
 #dx-net{position:fixed;left:18px;bottom:18px;z-index:2147483646;display:flex;align-items:center;gap:9px;padding:8px 13px 8px 11px;border-radius:999px;background:rgba(10,12,22,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#f4f1ea;font:500 11px/1 'Instrument Sans',Helvetica,Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;pointer-events:none;transition:box-shadow .6s ease,transform .6s ease}
 #dx-net i{width:8px;height:8px;border-radius:50%;background:#7ee0a1;box-shadow:0 0 0 0 rgba(126,224,161,.6);animation:dxp 2.4s ease-out infinite}
-#dx-net b{font:400 22px/1 'Instrument Serif',Georgia,serif;letter-spacing:0;min-width:.6em;text-align:center}
+#dx-net b{font:600 17px/1 'Instrument Sans',Helvetica,Arial,sans-serif;letter-spacing:0;min-width:.7em;text-align:center;font-variant-numeric:tabular-nums}
 #dx-net.hot i{background:#f3a35a;animation:none}
 #dx-net.lit{box-shadow:0 0 0 2px rgba(126,224,161,.55),0 0 34px rgba(126,224,161,.35);transform:scale(1.18);transform-origin:left bottom}
 @keyframes dxp{0%{box-shadow:0 0 0 0 rgba(126,224,161,.55)}70%{box-shadow:0 0 0 9px rgba(126,224,161,0)}100%{box-shadow:0 0 0 0 rgba(126,224,161,0)}}
@@ -64,7 +64,7 @@ function glide(sel,to,ms){ return new Promise(r=>{ const e=$(sel); if(!e) return
 let tok=0;
 // a beat's signs, spread evenly until the beat ends
 function signs(list,end,sub=""){ const my=++tok, a=el(), span=Math.max(1,end-a)/list.length; list.forEach((l,i)=>setTimeout(()=>{ if(my===tok) cap(l,sub); },i*span*1000)); }
-function cap(l,s=""){ const c=$("#dx-cap"); c.classList.remove("on"); setTimeout(()=>{ c.innerHTML=`<span class="l">${l}</span>${s?`<span class="s">${s}</span>`:""}`; c.classList.add("on"); },380); }
+function cap(l,s=""){ const c=$("#dx-cap"); c.classList.remove("on"); setTimeout(()=>{ c.innerHTML=`<span class="l">${l}${s?`<span class="s">${s}</span>`:""}</span>`; c.classList.add("on"); },380); }
 
 async function run(){
   // every font the tour uses is fetched before the clock starts, so the meter only sees the tour itself
