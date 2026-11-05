@@ -28,7 +28,7 @@ function tplAfterApply(){
 /* ---------- Basic: a plain vertical timeline ---------- */
 function renderBasic(){
   const ms=moments(), ti=ms.findIndex(e=>e.kind==="today");
-  $("#bWho").innerHTML=isExample()?`<h2>Mika's timeline</h2><span class="bnote">Example. Mika is made up.</span>`:`<h2>Your timeline</h2><span class="bnote">Saved in this browser only</span>`;
+  $("#bWho").innerHTML=isExample()?`<h2>Ryo's timeline</h2><span class="bnote">Example</span>`:`<h2>Your timeline</h2><span class="bnote">Saved in this browser only</span>`;
   let html="", prev="";
   ms.forEach((e,k)=>{
     if(e.chapter!==prev&&e.kind!=="today"){ html+=`<li class="bch">${esc(CHN[e.chapter]||e.chapter)}</li>`; prev=e.chapter; }
@@ -61,6 +61,7 @@ function cosDraw(now){
   const c=$("#cosCanvas"), x=c.getContext("2d"), {w,h,d}=COS; if(!w) return;
   const tt=(now||0)/1000;
   x.setTransform(d,0,0,d,0,0); x.clearRect(0,0,w,h);
+  if(C3.on){ cosOver(x,tt); return; }
   // nebula: three slow clouds of colour
   [[.72,.3,.55,"124,92,255",.16],[.2,.75,.5,"46,190,210",.11],[.5,.5,.35,"243,210,122",.07]].forEach(([fx,fy,fr,col,al],k)=>{ const ox=fx*w+Math.sin(tt*.05+k*2)*w*.03, oy=fy*h+Math.cos(tt*.04+k)*h*.03, rr=Math.max(w,h)*fr; const g=x.createRadialGradient(ox,oy,0,ox,oy,rr); g.addColorStop(0,`rgba(${col},${al})`); g.addColorStop(1,`rgba(${col},0)`); x.fillStyle=g; x.fillRect(0,0,w,h); });
   // the chart: a slowly turning ring of ticks around the spiral, like an old star chart
@@ -106,18 +107,23 @@ function cosFxDraw(x,now){ if(!COS.fx||!COS.fx.length) return;
     if(f.k==="gold"){ const g=x.createRadialGradient(f.x,f.y,0,f.x,f.y,30+e*60); g.addColorStop(0,`rgba(243,210,122,${.7*(1-a/2.4)})`); g.addColorStop(1,"rgba(243,210,122,0)"); x.fillStyle=g; x.beginPath(); x.arc(f.x,f.y,30+e*60,0,7); x.fill(); x.strokeStyle=`rgba(243,210,122,${1-a/2.4})`; x.lineWidth=2; x.beginPath(); x.arc(f.x,f.y,8+e*22,0,7); x.stroke(); }
     if(f.k==="dim"){ const j=a<.6?Math.sin(a*60)*4*(1-a/.6):0; x.strokeStyle=`rgba(226,92,84,${.85*(1-a/2.4)})`; x.lineWidth=2; x.beginPath(); x.arc(f.x+j,f.y,10+e*14,0,7); x.stroke(); const g=x.createRadialGradient(f.x,f.y,0,f.x,f.y,60); g.addColorStop(0,`rgba(10,8,20,${.55*(1-a/2.4)})`); g.addColorStop(1,"rgba(10,8,20,0)"); x.fillStyle=g; x.beginPath(); x.arc(f.x,f.y,60,0,7); x.fill(); }
   } }
-function cosLoop(now){ cosDraw(now); cosFxDraw($("#cosCanvas").getContext("2d"),now); if(TPL==="cosmos"&&!still&&!document.hidden) COS.raf=requestAnimationFrame(cosLoop); }
+function cosOver(x,tt){ const P=COS.pts, wide=COS.w>=720;
+  P.forEach((p,i)=>{ if(p.behind) return; const e=p.e, sel=i===COS.sel, today=e.kind==="today";
+    if(sel){ x.strokeStyle="rgba(243,210,122,.95)"; x.lineWidth=1.6; x.beginPath(); x.arc(p.x,p.y,16+(still?0:Math.sin(tt*3)*2),0,7); x.stroke(); }
+    if(sel||(wide&&today)){ x.fillStyle=sel?"#f3d27a":"rgba(200,206,230,.85)"; x.font=`600 ${sel?14:12}px "Instrument Sans",system-ui,sans-serif`; x.fillText(today?"Now":(e.when||"").slice(0,22),p.x+22,p.y+5); }
+  }); }
+function cosLoop(now){ if(C3.on&&TPL==="cosmos") cos3Frame(now); cosDraw(now); cosFxDraw($("#cosCanvas").getContext("2d"),now); if(TPL==="cosmos"&&!still&&!document.hidden) COS.raf=requestAnimationFrame(cosLoop); }
 function cosStop(){ cancelAnimationFrame(COS.raf); COS.raf=0; }
 function cosSelect(i){
   const P=COS.pts; if(!P.length) return; COS.sel=clamp(i,0,P.length-1); const e=P[COS.sel].e;
   $("#cPanel").innerHTML=e.kind==="today"
-    ?`<div class="cw">Today · ${esc(fmtDay(new Date()))}</div><h3>You are here.</h3>${payList()}`
-    :`<div class="cw">${esc(e.kind==="ahead"?"Plan · ":"")}${esc(e.when||CHN[e.chapter]||"")}</div><h3>${esc(e.line)}</h3>${e.detail?`<p>${esc(e.detail)}</p>`:""}${e.kind==="ahead"?paySlip(e.id):""}`;
+    ?`<div class="cw">${esc(fmtDay(new Date()))}</div><h3>Now.</h3>${payList()}`
+    :`<div class="cw">${esc(e.when||CHN[e.chapter]||"")}</div><h3>${esc(e.line)}</h3>${e.kind==="ahead"?paySlip(e.id):""}`;
   $("#cCount").textContent=`${COS.sel+1} of ${P.length}`;
   if(still) cosDraw(0);
 }
-function renderCosmos2(){
-  $("#cHint").textContent=isExample()?"Mika's timeline (made up). Each star is a moment. The bright one is today. Rings are plans.":"Each star is a moment. The bright one is today. Rings are plans.";
+function renderCosmos2(){ if(C3.on) cos3Build(); else cos3Init();
+  $("#cHint").textContent=isExample()?"Ryo's life. Make it yours.":"";
   cosLayout(); const ti=COS.pts.findIndex(p=>p.e.kind==="today");
   cosSelect(COS.selSet?COS.sel:Math.max(0,ti)); COS.selSet=true;
   cosStop(); if(still) cosDraw(0); else COS.raf=requestAnimationFrame(cosLoop);
@@ -127,8 +133,73 @@ $("#cosCanvas").addEventListener("click",ev=>{
   let best=-1,bd=34*34; COS.pts.forEach((p,i)=>{const dd=(p.x-px)**2+(p.y-py)**2;if(dd<bd){bd=dd;best=i}});
   if(best>=0){ cosSelect(best); try{SFX.pluck()}catch(e){} }
 });
-new ResizeObserver(()=>{ if(TPL==="cosmos"){ cosLayout(); cosDraw(performance.now()); } if(TPL==="basic"){} }).observe($("#tplCosmos"));
+new ResizeObserver(()=>{ if(TPL==="cosmos"){ cosLayout(); cos3Size(); if(C3.on) cos3Frame(performance.now()); cosDraw(performance.now()); } if(TPL==="basic"){} }).observe($("#tplCosmos"));
 
+
+
+/* ---------- Cosmos in 3D: a three.js sky the 2D layer draws labels and payoffs over ---------- */
+const THREE_URL=HOSTED?new URL("vendor/three-0.170.0.min.js",location.href).href:"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js";
+const C3={on:false,busy:false};
+function glowTex(T,inner,outer){ const c=document.createElement("canvas"); c.width=c.height=128; const x=c.getContext("2d"), g=x.createRadialGradient(64,64,0,64,64,64); g.addColorStop(0,inner); g.addColorStop(.22,inner.replace(/[\d.]+\)$/,".55)")); g.addColorStop(1,outer); x.fillStyle=g; x.fillRect(0,0,128,128); const t=new T.CanvasTexture(c); t.colorSpace=T.SRGBColorSpace; return t; }
+async function cos3Init(){
+  if(C3.on||C3.busy||C3.failed) return; C3.busy=true;
+  try{
+    const probe=document.createElement("canvas"); if(!(probe.getContext("webgl2")||probe.getContext("webgl"))) throw new Error("no webgl");
+    const T=await import(THREE_URL); C3.T=T;
+    const host=$("#tplCosmos"), cv=document.createElement("canvas"); cv.id="cos3"; cv.setAttribute("aria-hidden","true"); host.insertBefore(cv,$("#cosCanvas"));
+    const r=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:true,powerPreference:"high-performance"}); r.setClearColor(0x000000,0);
+    const scene=new T.Scene(), cam=new T.PerspectiveCamera(42,1,.1,200);
+    Object.assign(C3,{r,scene,cam,cv,tgt:new T.Vector3(),look:new T.Vector3(),t0:performance.now()});
+    // deep sky
+    const N=2600, pos=new Float32Array(N*3), col=new Float32Array(N*3);
+    for(let i=0;i<N;i++){ const u=hash(i*1.7)*2-1, th=hash(i*3.1)*Math.PI*2, rr=40+hash(i*5.3)*30, sq=Math.sqrt(1-u*u); pos.set([Math.cos(th)*sq*rr,u*rr,Math.sin(th)*sq*rr],i*3); const g=hash(i*7.7)<.1; col.set(g?[1,.86,.55]:[.85,.9,1],i*3); }
+    const sg=new T.BufferGeometry(); sg.setAttribute("position",new T.BufferAttribute(pos,3)); sg.setAttribute("color",new T.BufferAttribute(col,3));
+    C3.sky=new T.Points(sg,new T.PointsMaterial({size:.55,map:glowTex(T,"rgba(255,255,255,1)","rgba(255,255,255,0)"),vertexColors:true,transparent:true,depthWrite:false,blending:T.AdditiveBlending,opacity:.9}));
+    scene.add(C3.sky);
+    // nebula clouds
+    C3.neb=[["rgba(124,92,255,.5)",[-14,-6,-30],34],["rgba(46,190,210,.35)",[18,4,-34],30],["rgba(243,210,122,.22)",[0,-10,-20],22]].map(([c,p,sz])=>{ const m=new T.Sprite(new T.SpriteMaterial({map:glowTex(T,c,"rgba(0,0,0,0)"),transparent:true,depthWrite:false,blending:T.AdditiveBlending,opacity:.55})); m.position.set(...p); m.scale.set(sz,sz,1); scene.add(m); return m; });
+    C3.dot=glowTex(T,"rgba(255,255,255,1)","rgba(255,255,255,0)"); C3.gold=glowTex(T,"rgba(255,226,150,1)","rgba(243,190,90,0)");
+    C3.light=new T.PointLight(0xffd98a,40,30,1.6); scene.add(C3.light); scene.add(new T.AmbientLight(0x6070a0,.35));
+    C3.on=true; host.classList.add("c3"); cos3Build(); cos3Size();
+    COS.raf||(!still&&(COS.raf=requestAnimationFrame(cosLoop))); if(still) cosLoop(performance.now());
+  }catch(e){ C3.failed=true; }
+  C3.busy=false;
+}
+function cos3Build(){
+  if(!C3.on) return; const T=C3.T, sc=C3.scene;
+  (C3.grp&&sc.remove(C3.grp)); const grp=C3.grp=new T.Group(); sc.add(grp);
+  const ms=moments(), n=ms.length, ti=ms.findIndex(e=>e.kind==="today");
+  C3.p3=ms.map((e,i)=>{ const f=n>1?i/(n-1):0, a=-Math.PI*.6+f*Math.PI*2.35, r=1+7.2*Math.pow(f,.85); return new T.Vector3(Math.cos(a)*r,Math.sin(i*1.3)*.35+(e.kind==="ahead"?.6:0),Math.sin(a)*r); });
+  C3.spr=ms.map((e,i)=>{ const today=e.kind==="today", ahead=e.kind==="ahead", big=e.splat==="red", mid=e.splat==="black";
+    if(ahead){ const ring=new T.Mesh(new T.TorusGeometry(.34,.035,12,48),new T.MeshStandardMaterial({color:0xc8d2f0,emissive:0x2a3350,roughness:.35,metalness:.6})); ring.position.copy(C3.p3[i]); ring.rotation.x=Math.PI/2.4; grp.add(ring);
+      const rr=Math.hypot(C3.p3[i].x,C3.p3[i].z), orb=new T.Mesh(new T.TorusGeometry(rr,.006,6,160),new T.MeshBasicMaterial({color:0x9aa4c7,transparent:true,opacity:.22})); orb.rotation.x=Math.PI/2; orb.position.y=C3.p3[i].y; grp.add(orb); return ring; }
+    const m=new T.Sprite(new T.SpriteMaterial({map:today?C3.gold:C3.dot,color:today?0xffe2a0:big?0xfff0c8:0xe9eeff,transparent:true,depthWrite:false,blending:T.AdditiveBlending}));
+    const s=today?2.6:big?1.5:mid?1.1:.85; m.userData.s=s; m.scale.set(s,s,1); m.position.copy(C3.p3[i]); grp.add(m); return m; });
+  if(ti>=0){ C3.light.position.copy(C3.p3[ti]); const core=new T.Mesh(new T.SphereGeometry(.16,24,16),new T.MeshBasicMaterial({color:0xfff1c8})); core.position.copy(C3.p3[ti]); grp.add(core); }
+  // the path: lit up to today, faint after
+  const cut=ti<0?n-1:ti, mk=(a,b,op,rad)=>{ if(b-a<1) return; const curve=new T.CatmullRomCurve3(C3.p3.slice(a,b+1)); grp.add(new T.Mesh(new T.TubeGeometry(curve,Math.max(8,(b-a)*24),rad,6,false),new T.MeshBasicMaterial({color:0x8fb0ff,transparent:true,opacity:op,blending:T.AdditiveBlending,depthWrite:false}))); };
+  mk(0,cut,.55,.022); mk(cut,n-1,.16,.012);
+  // the star chart ring, tilted with the plane
+  const R0=9.4, ch=new T.Group(); ch.add(new T.Mesh(new T.TorusGeometry(R0,.01,6,240),new T.MeshBasicMaterial({color:0xf3d27a,transparent:true,opacity:.28})));
+  const tv=[]; for(let k=0;k<120;k++){ const a=k/120*Math.PI*2, L=k%10===0?.6:k%5===0?.3:.14; tv.push(Math.cos(a)*R0,Math.sin(a)*R0,0,Math.cos(a)*(R0+L),Math.sin(a)*(R0+L),0); }
+  const tg=new T.BufferGeometry(); tg.setAttribute("position",new T.Float32BufferAttribute(tv,3)); ch.add(new T.LineSegments(tg,new T.LineBasicMaterial({color:0xf3d27a,transparent:true,opacity:.35})));
+  ch.rotation.x=Math.PI/2; grp.add(ch); C3.chart=ch;
+  C3.look.copy((C3.p3[COS.sel]||new T.Vector3()).clone().multiplyScalar(.4));
+}
+function cos3Size(){ if(!C3.on) return; const c=$("#cosCanvas"), w=c.clientWidth||innerWidth, h=c.clientHeight||innerHeight; C3.r.setPixelRatio(FAST?1:Math.min(2,devicePixelRatio||1)); C3.r.setSize(w,h,false); C3.cam.aspect=w/h; C3.cam.fov=w<700?58:40; C3.cam.updateProjectionMatrix(); C3.w=w; C3.h=h; }
+function cos3Frame(now){
+  const T=C3.T, t=(now-C3.t0)/1000, sel=C3.p3[COS.sel]; if(!sel) return;
+  // the camera leans toward the chosen star: the guide leads the eye
+  C3.look.lerp(sel.clone().multiplyScalar(.4),still?1:.05);
+  const wide=C3.w>=896, drift=still?0:t*.05, ang=-.9+drift, dist=wide?19:27, hgt=wide?12:20;
+  const want=new T.Vector3(C3.look.x+Math.cos(ang)*dist,hgt+Math.sin(t*.3)*.4,C3.look.z+Math.sin(ang)*dist);
+  C3.cam.position.lerp(want,still?1:.04); const la=C3.look.clone(); if(wide) la.add(new T.Vector3(Math.sin(ang)*3.4,0,-Math.cos(ang)*3.4)); else la.add(new T.Vector3(0,-2.2,0)); C3.cam.lookAt(la);
+  C3.sky.rotation.y=t*.004; C3.chart.rotation.z=t*.02;
+  C3.spr.forEach((m,i)=>{ if(m.isSprite){ const b=still?1:1+.09*Math.sin(t*1.7+i*1.9); const s=m.userData.s*(i===COS.sel?1.35:1)*b; m.scale.set(s,s,1); } else m.rotation.z=t*.6+i; });
+  C3.light.intensity=still?40:40+8*Math.sin(t*2);
+  C3.r.render(C3.scene,C3.cam);
+  const v=new T.Vector3(); COS.pts.forEach((p,i)=>{ v.copy(C3.p3[i]).project(C3.cam); p.x=(v.x*.5+.5)*C3.w; p.y=(-v.y*.5+.5)*C3.h; p.behind=v.z>1; });
+}
 
 /* ---------- the payoff, in every template: strike a to-do, read a plan's fortune ---------- */
 const PAY={read:{}};

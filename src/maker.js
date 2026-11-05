@@ -2,7 +2,7 @@
 const MK={tier:null, step:0, ans:{}, out:null, busy:false, who:store.get("tlpub.who","llama"), dev:null};
 const QZ=TLGen.QUIZ;
 const mkBody=()=>$("#mkBody");
-function openMaker(){ interrupt(); $$(".veil").forEach(v=>v.hidden=true); $("#makerVeil").hidden=false; mkTiers(); }
+function openMaker(){ interrupt(); $$(".veil").forEach(v=>v.hidden=true); $("#makerVeil").hidden=false; MK.who="llama"; mkWords(); }
 function mkSet(html){ const b=mkBody(); b.innerHTML=html; ink(b,900); const f=$("[data-autofocus]",b)||$("button,textarea",b); if(f) setTimeout(()=>f.focus({preventScroll:true}),60); }
 function meter(n){ return `<span class="meter m${n}" aria-hidden="true"><i></i><i></i><i></i></span>`; }
 
@@ -102,12 +102,8 @@ function mkWords(){
   <textarea id="mkText" maxlength="${TLGuard.MAX_INPUT}" rows="6" placeholder="Where you grew up, what you loved, what changed, what's next." data-autofocus>${esc(draft)}</textarea>
   <div class="tcount"><span id="mkCount">${draft.length} / ${TLGuard.MAX_INPUT}</span><button class="txt-btn" type="button" data-mk="example">Try a made-up example</button></div>
   <ul class="cut" id="mkCut" aria-live="polite"></ul>
-  <fieldset class="who"><legend>Who writes it</legend><div class="seg2">
-    <button type="button" data-who="llama" aria-pressed="${MK.who==="llama"}"><b>Llama 3.2</b><span>On this device. Nothing leaves it.</span></button>
-    <button type="button" data-who="muse" aria-pressed="${MK.who==="muse"}"><b>Muse by Meta</b><span>Sends the cleaned text to Meta. Opt-in.</span></button>
-  </div></fieldset>
   <p class="devline" id="devline">${MK.who==="llama"?"Checking this device…":museLine()}</p>
-  <div class="row mkfoot"><button class="ghost" type="button" data-mk="home">Back</button><button class="seal-btn" type="button" data-mk="write">Write my timeline</button></div>`);
+  <div class="row mkfoot"><button class="seal-btn" type="button" data-mk="write">Write it with Llama</button></div>`);
   liveCut(); devCheck();
 }
 function museLine(){ return MUSE_OK?"Muse is ready. Only the text shown above, with refused parts cut out, is sent. Nothing is stored.":HOSTED?"Muse isn't switched on for this site right now. Use Llama or the quiz.":"Muse runs on the live site. This preview can't reach it."; }

@@ -158,3 +158,14 @@
 .cpanel .pslip.bad{border-color:rgba(226,92,84,.55);background:rgba(226,92,84,.08)}.cpanel .pslip.bad .pg{color:#f19a90}
 .cpanel{max-height:calc(100% - 200px);overflow:auto}
 @media (prefers-reduced-motion:reduce){.pt.pop,.pt.pop i::after,.pslip.in{animation:none}}
+
+/* 3D sky under the 2D labels */
+#cos3{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.c3 #cosCanvas{background:transparent}
+/* no double-tap zoom, no tap delay */
+html,body,button,a,input,label,[data-act],[data-cos],[data-pt],[data-pdraw],[data-pact],#cosCanvas{touch-action:manipulation}
+.pdraw::before{content:"";display:inline-block;width:8px;height:8px;margin-right:10px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor;animation:pbeat 1.6s ease-in-out infinite}
+@keyframes pbeat{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+.padd input:placeholder-shown{animation:pcall 2.4s ease-in-out infinite}
+@keyframes pcall{0%,100%{box-shadow:0 0 0 0 rgba(243,210,122,0)}50%{box-shadow:0 0 0 4px rgba(243,210,122,.18)}}
+@media (prefers-reduced-motion:reduce){.pdraw::before,.padd input:placeholder-shown{animation:none}}

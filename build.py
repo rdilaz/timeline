@@ -22,19 +22,18 @@ def data():
     js = r"""
 const g=require('./src/gen.js');
 const m=[
- {kind:'event',chapter:'roots',when:'Childhood',kanji:'海',line:'A small town by the sea.',detail:'Salt air and a horizon that always looked like a promise.',splat:'none'},
- {kind:'event',chapter:'roots',when:'Age 9',kanji:'音',line:'A secondhand piano arrives.',detail:'Three keys stick. You learn every song anyway.',splat:'black'},
- {kind:'event',chapter:'craft',when:'High school',kanji:'工',line:'Robotics club, three years running.',detail:'Late nights, burnt fingers and one robot that finally climbed the ramp.',splat:'none'},
- {kind:'event',chapter:'craft',when:'College',kanji:'学',line:'A degree in mechanical engineering.',detail:'Gears, heat and the patience to get one thing exactly right.',splat:'red'},
- {kind:'event',chapter:'work',when:'First job',kanji:'職',line:'Fixing machines on night shifts.',detail:'The quiet hours taught you to listen to how things break.',splat:'none'},
- {kind:'event',chapter:'work',when:'Year four',kanji:'移',line:'A new city and a design job.',detail:'Boxes in a small apartment, and drawings that finally get built.',splat:'black'},
- {kind:'event',chapter:'making',when:'Weekends',kanji:'陶',line:'Pottery, badly, then well.',detail:'The wheel does not care how your week went. That is the point.',splat:'none'},
- {kind:'event',chapter:'making',when:'Last spring',kanji:'店',line:'A tiny online shop for your bowls.',detail:'Twelve sold in the first month. Every one wrapped by hand.',splat:'red'},
- {kind:'ahead',chapter:'ahead',when:'Next year',kanji:'旅',line:'Walk the Kumano Kodo.',detail:'Old pilgrim paths through the mountains, one village a day.',splat:'none'},
- {kind:'ahead',chapter:'ahead',when:'Someday',kanji:'家',line:'A workshop with a garden.',detail:'A kiln out back and tomatoes by the door.',splat:'none'}
+ {kind:'event',chapter:'roots',when:'Childhood',kanji:'海',line:'Between the city and the sea.',detail:'Subway mornings, then a harbor town.',splat:'none'},
+ {kind:'event',chapter:'craft',when:'Since 2018',kanji:'舞',line:'Stagehand.',detail:'Load-ins, late nights, shows that open on time.',splat:'black'},
+ {kind:'event',chapter:'craft',when:'College',kanji:'学',line:'Computer Science, magna cum laude.',detail:'',splat:'red'},
+ {kind:'event',chapter:'work',when:'Teaching',kanji:'教',line:'TA for ethics in computing.',detail:'',splat:'none'},
+ {kind:'event',chapter:'work',when:'Now',kanji:'工',line:'Data center field tech.',detail:'Racks, cables, quiet hours.',splat:'black'},
+ {kind:'event',chapter:'making',when:'This year',kanji:'作',line:'Building Kensa, Riff and Timeline.',detail:'',splat:'red'},
+ {kind:'ahead',chapter:'ahead',when:'Next winter',kanji:'旅',line:'A trip to Japan.',detail:'',splat:'none'},
+ {kind:'ahead',chapter:'ahead',when:'Next',kanji:'農',line:'An AI role in ag-tech.',detail:'',splat:'none'},
+ {kind:'ahead',chapter:'ahead',when:'Someday',kanji:'家',line:'A life in Japan.',detail:'',splat:'none'}
 ];
 const ev=g.assemble(m,'Example scroll');
-ev[0].line="Mika's life, left to right."; ev[0].detail="Mika is made up. Make your own scroll next: you choose how much you share.";
+ev[0].line="Ryo's life, left to right."; ev[0].detail="Make your own next.";
 ev.forEach((e,i)=>{ if(e.id.startsWith('m-')) e.id='ex-'+i; });
 process.stdout.write(JSON.stringify({version:1,owner:"",chapters:g.CHAPTERS,events:ev,deck:g.buildDeck(ev)}));
 """
