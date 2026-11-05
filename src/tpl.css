@@ -32,7 +32,7 @@
 .tpl-basic .feed li.no .fl,.tpl-cosmos .feed li.no .fl{text-decoration-color:#c2412d}
 .tpl-basic .feed li.no .fv,.tpl-cosmos .feed li.no .fv{color:#b2361f}
 .tpl-basic .toast,.tpl-cosmos .toast{top:auto;bottom:calc(max(16px,env(safe-area-inset-bottom)) + 12px);border-radius:12px;border-color:var(--b-line);font-family:var(--b-sans)}
-.tpl-cosmos .toast{bottom:calc(max(16px,env(safe-area-inset-bottom)) + 76px)}
+.tpl-cosmos .toast{bottom:auto;top:calc(max(12px,env(safe-area-inset-top)) + 64px)}
 
 /* ---------- Basic ---------- */
 .tbasic{background:var(--b-bg);color:var(--b-ink);font-family:var(--b-sans)}
