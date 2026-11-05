@@ -99,8 +99,9 @@ function mkWords(){
   MK.tier="words";
   const draft=MK.draft||"";
   mkSet(`<label for="mkText" class="mklabel">Your story, in a few sentences</label>
-  <textarea id="mkText" maxlength="${TLGuard.MAX_INPUT}" rows="6" placeholder="Where you grew up, what you loved, what changed, what's next." data-autofocus>${esc(draft)}</textarea>
+  <textarea id="mkText" maxlength="8000" rows="6" placeholder="Where you grew up, what you loved, what changed, what's next." data-autofocus>${esc(draft)}</textarea>
   <div class="tcount"><span id="mkCount">${draft.length} / ${TLGuard.MAX_INPUT}</span><button class="txt-btn" type="button" data-mk="example">Try a made-up example</button></div>
+  <button class="ghost metab" type="button" data-mk="metaai">Ask Meta AI instead</button>
   <ul class="cut" id="mkCut" aria-live="polite"></ul>
   <p class="devline" id="devline">${MK.who==="llama"?"Checking this device…":museLine()}</p>
   <div class="row mkfoot"><button class="seal-btn" type="button" data-mk="write">Write it with Llama</button></div>`);
@@ -121,7 +122,13 @@ async function devCheck(){
   line.classList.toggle("warn",!d.ok);
 }
 async function mkWrite(){
-  const ta=$("#mkText"); MK.draft=ta.value; const c=TLGuard.clean(ta.value);
+  const ta=$("#mkText"); MK.draft=ta.value;
+  // a reply pasted back from Meta AI: build straight from it, through the same checker
+  const pasted=(()=>{ try{ const j=extractJSON(ta.value); return j&&Array.isArray(j.moments)?j:null }catch(e){ return null } })();
+  if(pasted){ const chk=TLGen.checkMoments(pasted);
+    if(Array.isArray(pasted.today)) pasted.today.slice(0,6).forEach(t=>{ const v=TLGuard.clean(String(t)).text.replace(/▢/g,"").trim(); if(v.length>2) addTodo(v.slice(0,80)); });
+    if(chk.moments.length>=2){ mkResult(chk.moments,"words",0,"Built from Meta AI's reply.",chk.dropped); return; } }
+  const c=TLGuard.clean(ta.value);
   if(c.empty){ $("#mkCut").innerHTML=`<li>Write a sentence or two first.</li>`; ta.focus(); return; }
   const cut=c.removed.length;
   mkRun(MK.who==="muse"?"Sending to Muse":"Waking Llama");
@@ -239,6 +246,9 @@ document.addEventListener("click",ev=>{
   if(a==="quiz") { MK.ans={}; return mkQuiz(0); }
   if(a==="apps") return mkApps();
   if(a==="words") return mkWords();
+  if(a==="metaai"){ const ask="Help me make my life timeline for an app called Timeline. First ask me up to five short questions about my life, one at a time. When you have enough, reply with only one JSON object and nothing else. "+TLGen.SYSTEM.replace("You turn a person's short life story into a timeline for an ink-scroll app. ","")+" Also include \"today\": a list of up to five short to-dos for today.";
+    const go=()=>{ window.open("https://www.meta.ai/","_blank","noopener"); const l=$("#mkCut"); if(l) l.innerHTML=`<li>Copied. Paste it into Meta AI, then paste its reply here.</li>`; const ta=$("#mkText"); if(ta){ ta.placeholder="Paste Meta AI's reply here."; } };
+    (navigator.clipboard?navigator.clipboard.writeText(ask):Promise.reject()).then(go).catch(()=>{ const ta=$("#mkText"); if(ta){ ta.value=ask; ta.select(); } go(); }); return; }
   if(a==="qnext") return qNext();
   if(a==="qback") return mkQuiz(Math.max(0,MK.step-1));
   if(a==="qskip"){ MK.ans[QZ[MK.step].id]=[]; return qNext(); }
