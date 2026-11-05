@@ -28,9 +28,9 @@
 
 <br>
 
-## Cosmos, and two looks in beta
+## Basic, Cosmos, and Ink soon
 
-Cosmos spirals your life out to today, inside a slowly turning star chart. Ink scroll and Basic show the same timeline, and both are in beta.
+Timeline opens on Basic, a plain list you read in seconds. Cosmos spirals the same life out to today inside a slowly turning star chart. Ink scroll is coming soon.
 
 <p align="center">
   <picture>
@@ -41,8 +41,8 @@ Cosmos spirals your life out to today, inside a slowly turning star chart. Ink s
 
 ## Make yours
 
-- **Write a few sentences.** Meta Llama 3.2 1B turns them into your timeline in the browser, on WebGPU. Without WebGPU, a simple writer on the page stands in.
-- **Or ask Meta AI.** One tap copies a ready prompt and opens Meta AI. It asks you a few questions, you paste its reply back, and Timeline builds from it.
+- **Hand it to Meta AI.** Timeline copies a handoff prompt. Paste it into Meta AI, or any AI chat you like. It asks you a few questions, you paste its reply back, and Timeline builds from it.
+- **Or write a few sentences.** Meta Llama 3.2 1B turns them into your timeline right in the browser, on WebGPU. Without WebGPU, a simple writer on the page stands in.
 
 Open it and Ryo's own life is the example, so there is something to explore before you write a word.
 

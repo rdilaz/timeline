@@ -2,13 +2,16 @@
    One timeline, three looks. Basic is plain and readable in seconds; Ink scroll is the
    original handscroll; Cosmos puts each moment on a star spiralling out to today. */
 const TPLS=["basic","ink","cosmos"];
-let TPL=store.get("tlpub.tpl","cosmos"); if(!TPLS.includes(TPL)) TPL="basic";
+// Ink scroll is Ryo's demo only: unlocked with ?demo or ?ink, never for the public
+const INK_OK=/[?&](demo|ink)\b/.test(location.search);
+if(INK_OK) document.querySelectorAll('.tplcard[data-tpl="ink"]').forEach(c=>{c.classList.remove("soon");c.removeAttribute("aria-disabled");const e=c.querySelector(".beta");if(e)e.textContent="Demo";});
+let TPL=store.get("tlpub.tpl","basic"); if(!TPLS.includes(TPL)||(TPL==="ink"&&!INK_OK)) TPL="basic";
 const isExample=()=>events[0]&&events[0].when==="Example scroll";
 const moments=()=>events.filter(e=>e.kind==="event"||e.kind==="today"||e.kind==="ahead");
 const CHN={roots:"Early years",craft:"Learning",work:"Work",making:"Making",now:"Now",ahead:"Ahead"};
 
 function setTpl(t,quiet){
-  if(!TPLS.includes(t)) t="basic";
+  if(!TPLS.includes(t)||(t==="ink"&&!INK_OK)) t="basic";
   TPL=t; store.set("tlpub.tpl",t);
   const de=document.documentElement; TPLS.forEach(k=>de.classList.toggle("tpl-"+k,k===t));
   $("#tplBasic").hidden=t!=="basic"; $("#tplCosmos").hidden=t!=="cosmos";
@@ -232,7 +235,7 @@ function cosFx(k){ if(TPL!=="cosmos"||!COS.pts.length) return; const p=COS.pts[C
 /* ---------- picker + controls (capture phase, so the ink scroll's own handler never sees them) ---------- */
 document.addEventListener("click",ev=>{
   const tp=ev.target.closest("[data-tpl]");
-  if(tp){ ev.stopPropagation(); $("#tplVeil").hidden=true; setTpl(tp.dataset.tpl); return; }
+  if(tp){ ev.stopPropagation(); if(tp.dataset.tpl==="ink"&&!INK_OK){ tp.classList.remove("nudge"); void tp.offsetWidth; tp.classList.add("nudge"); return; } $("#tplVeil").hidden=true; setTpl(tp.dataset.tpl); return; }
   const cb=ev.target.closest("[data-cos]");
   if(cb){ ev.stopPropagation(); cosSelect(COS.sel+(+cb.dataset.cos)); try{SFX.pluck()}catch(e){} return; }
   const a=ev.target.closest("[data-act]"); if(!a) return;

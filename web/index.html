@@ -1105,6 +1105,23 @@ html,body,button,a,input,label,[data-act],[data-cos],[data-pt],[data-pdraw],[dat
 
 .tplcard .beta{margin-left:6px;padding:2px 7px;border-radius:999px;border:1px solid var(--b-line);font:600 .62rem/1.4 var(--b-sans);font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--b-mute);vertical-align:middle}
 
+/* template previews move: stars twinkle and the gold now-star breathes; the ink stroke paints itself in */
+.th-cos i{animation:twk 2.6s ease-in-out infinite}
+.th-cos i:nth-child(2){animation-delay:.5s}.th-cos i:nth-child(3){animation-delay:1.1s}.th-cos i:nth-child(5){animation:orb 5s linear infinite}
+.th-cos i:nth-child(4){animation:nowp 2.2s ease-in-out infinite}
+@keyframes twk{50%{opacity:.35;transform:scale(.7)}}
+@keyframes nowp{50%{box-shadow:0 0 22px 6px rgba(243,210,122,.75);transform:scale(1.25)}}
+@keyframes orb{to{transform:rotate(360deg)}}
+.th-ink i{transform-origin:0 50%;animation:brush 3.2s cubic-bezier(.6,0,.2,1) infinite}
+@keyframes brush{0%{transform:rotate(-2deg) scaleX(0)}45%,80%{transform:rotate(-2deg) scaleX(1);opacity:1}100%{transform:rotate(-2deg) scaleX(1);opacity:0}}
+.th-basic i{animation:rise 3s ease-out infinite}.th-basic i:nth-child(2){animation-delay:.2s}.th-basic i:nth-child(3){animation-delay:.4s}.th-basic i:nth-child(4){animation-delay:.6s}
+@keyframes rise{0%{opacity:0;transform:translateY(6px)}20%,85%{opacity:1;transform:none}100%{opacity:0}}
+.tplcard.soon{cursor:default;opacity:.78}
+.tplcard.soon:hover{transform:none}
+.tplcard.nudge{animation:nudge .4s}
+@keyframes nudge{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@media (prefers-reduced-motion:reduce){.th-cos i,.th-ink i,.th-basic i,.tplcard.nudge{animation:none}}
+
 </style>
 </head>
 <body>
@@ -1282,7 +1299,7 @@ html,body,button,a,input,label,[data-act],[data-cos],[data-pt],[data-pdraw],[dat
       </div>
       <div class="bwho" id="bWho"></div>
       <ol class="blist" id="bList"></ol>
-      <footer class="bfoot"><div class="brow"><button class="bbtn" type="button" data-tpl="cosmos">Back to Cosmos</button></div></footer>
+      <footer class="bfoot"><div class="brow"><button class="bbtn" type="button" data-tpl="cosmos">See it as stars</button></div></footer>
     </div>
   </section>
 
@@ -1300,11 +1317,11 @@ html,body,button,a,input,label,[data-act],[data-cos],[data-pt],[data-pdraw],[dat
   <div class="veil tplveil" id="tplVeil" hidden>
     <div class="sheet tplsheet" role="dialog" aria-modal="true" aria-labelledby="tpl-h">
       <div class="mkhead"><h2 id="tpl-h">Choose a template</h2><button class="ghost" type="button" data-act="closeveil">Close</button></div>
-      <p class="tplsub">Same timeline, three looks. Switch any time.</p>
+      <p class="tplsub">Same life. Pick a sky.</p>
       <div class="tplgrid">
+        <button class="tplcard" type="button" data-tpl="basic"><span class="th th-basic" aria-hidden="true"><i></i><i></i><i></i><i></i></span><b>Basic</b><span>A plain list.</span></button>
         <button class="tplcard" type="button" data-tpl="cosmos"><span class="th th-cos" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><b>Cosmos</b><span>Every moment a star.</span></button>
-        <button class="tplcard" type="button" data-tpl="ink"><span class="th th-ink" aria-hidden="true"><i></i></span><b>Ink scroll <em class="beta">Beta</em></b><span>A brush stroke through your life.</span></button>
-        <button class="tplcard" type="button" data-tpl="basic"><span class="th th-basic" aria-hidden="true"><i></i><i></i><i></i><i></i></span><b>Basic <em class="beta">Beta</em></b><span>A plain list.</span></button>
+        <button class="tplcard soon" type="button" data-tpl="ink" aria-disabled="true"><span class="th th-ink" aria-hidden="true"><i></i></span><b>Ink scroll <em class="beta">Soon</em></b><span>A brush stroke through your life.</span></button>
       </div>
     </div>
   </div>
@@ -2913,7 +2930,7 @@ function mkWords(){
   mkSet(`<label for="mkText" class="mklabel">Your story, in a few sentences</label>
   <textarea id="mkText" maxlength="8000" rows="6" placeholder="Where you grew up, what you loved, what changed, what's next." data-autofocus>${esc(draft)}</textarea>
   <div class="tcount"><span id="mkCount">${draft.length} / ${TLGuard.MAX_INPUT}</span><button class="txt-btn" type="button" data-mk="example">Try a made-up example</button></div>
-  <button class="ghost metab" type="button" data-mk="metaai">Ask Meta AI instead</button>
+  <button class="ghost metab" type="button" data-mk="metaai">Copy the handoff for Meta AI</button>
   <ul class="cut" id="mkCut" aria-live="polite"></ul>
   <p class="devline" id="devline">${MK.who==="llama"?"Checking this device…":museLine()}</p>
   <div class="row mkfoot"><button class="seal-btn" type="button" data-mk="write">Write it with Llama</button></div>`);
@@ -2939,7 +2956,7 @@ async function mkWrite(){
   const pasted=(()=>{ try{ const j=extractJSON(ta.value); return j&&Array.isArray(j.moments)?j:null }catch(e){ return null } })();
   if(pasted){ const chk=TLGen.checkMoments(pasted);
     if(Array.isArray(pasted.today)) pasted.today.slice(0,6).forEach(t=>{ const v=TLGuard.clean(String(t)).text.replace(/▢/g,"").trim(); if(v.length>2) addTodo(v.slice(0,80)); });
-    if(chk.moments.length>=2){ mkResult(chk.moments,"words",0,"Built from Meta AI's reply.",chk.dropped); return; } }
+    if(chk.moments.length>=2){ mkResult(chk.moments,"words",0,"Built from your AI's reply.",chk.dropped); return; } }
   const c=TLGuard.clean(ta.value);
   if(c.empty){ $("#mkCut").innerHTML=`<li>Write a sentence or two first.</li>`; ta.focus(); return; }
   const cut=c.removed.length;
@@ -3059,7 +3076,7 @@ document.addEventListener("click",ev=>{
   if(a==="apps") return mkApps();
   if(a==="words") return mkWords();
   if(a==="metaai"){ const ask="Help me make my life timeline for an app called Timeline. First ask me up to five short questions about my life, one at a time. When you have enough, reply with only one JSON object and nothing else. "+TLGen.SYSTEM.replace("You turn a person's short life story into a timeline for an ink-scroll app. ","")+" Also include \"today\": a list of up to five short to-dos for today.";
-    const go=()=>{ window.open("https://www.meta.ai/","_blank","noopener"); const l=$("#mkCut"); if(l) l.innerHTML=`<li>Copied. Paste it into Meta AI, then paste its reply here.</li>`; const ta=$("#mkText"); if(ta){ ta.placeholder="Paste Meta AI's reply here."; } };
+    const go=()=>{ window.open("https://www.meta.ai/","_blank","noopener"); const l=$("#mkCut"); if(l) l.innerHTML=`<li>Handoff copied. Paste it into Meta AI, or any AI chat, then paste the reply here.</li>`; const ta=$("#mkText"); if(ta){ ta.placeholder="Paste the reply here."; } };
     (navigator.clipboard?navigator.clipboard.writeText(ask):Promise.reject()).then(go).catch(()=>{ const ta=$("#mkText"); if(ta){ ta.value=ask; ta.select(); } go(); }); return; }
   if(a==="qnext") return qNext();
   if(a==="qback") return mkQuiz(Math.max(0,MK.step-1));
@@ -3078,13 +3095,16 @@ document.addEventListener("input",ev=>{ if(ev.target.id==="mkText"){ MK.draft=ev
    One timeline, three looks. Basic is plain and readable in seconds; Ink scroll is the
    original handscroll; Cosmos puts each moment on a star spiralling out to today. */
 const TPLS=["basic","ink","cosmos"];
-let TPL=store.get("tlpub.tpl","cosmos"); if(!TPLS.includes(TPL)) TPL="basic";
+// Ink scroll is Ryo's demo only: unlocked with ?demo or ?ink, never for the public
+const INK_OK=/[?&](demo|ink)\b/.test(location.search);
+if(INK_OK) document.querySelectorAll('.tplcard[data-tpl="ink"]').forEach(c=>{c.classList.remove("soon");c.removeAttribute("aria-disabled");const e=c.querySelector(".beta");if(e)e.textContent="Demo";});
+let TPL=store.get("tlpub.tpl","basic"); if(!TPLS.includes(TPL)||(TPL==="ink"&&!INK_OK)) TPL="basic";
 const isExample=()=>events[0]&&events[0].when==="Example scroll";
 const moments=()=>events.filter(e=>e.kind==="event"||e.kind==="today"||e.kind==="ahead");
 const CHN={roots:"Early years",craft:"Learning",work:"Work",making:"Making",now:"Now",ahead:"Ahead"};
 
 function setTpl(t,quiet){
-  if(!TPLS.includes(t)) t="basic";
+  if(!TPLS.includes(t)||(t==="ink"&&!INK_OK)) t="basic";
   TPL=t; store.set("tlpub.tpl",t);
   const de=document.documentElement; TPLS.forEach(k=>de.classList.toggle("tpl-"+k,k===t));
   $("#tplBasic").hidden=t!=="basic"; $("#tplCosmos").hidden=t!=="cosmos";
@@ -3308,7 +3328,7 @@ function cosFx(k){ if(TPL!=="cosmos"||!COS.pts.length) return; const p=COS.pts[C
 /* ---------- picker + controls (capture phase, so the ink scroll's own handler never sees them) ---------- */
 document.addEventListener("click",ev=>{
   const tp=ev.target.closest("[data-tpl]");
-  if(tp){ ev.stopPropagation(); $("#tplVeil").hidden=true; setTpl(tp.dataset.tpl); return; }
+  if(tp){ ev.stopPropagation(); if(tp.dataset.tpl==="ink"&&!INK_OK){ tp.classList.remove("nudge"); void tp.offsetWidth; tp.classList.add("nudge"); return; } $("#tplVeil").hidden=true; setTpl(tp.dataset.tpl); return; }
   const cb=ev.target.closest("[data-cos]");
   if(cb){ ev.stopPropagation(); cosSelect(COS.sel+(+cb.dataset.cos)); try{SFX.pluck()}catch(e){} return; }
   const a=ev.target.closest("[data-act]"); if(!a) return;
