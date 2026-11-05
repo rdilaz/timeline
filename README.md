@@ -28,9 +28,9 @@
 
 <br>
 
-## One life, three skins
+## Cosmos, and two looks in beta
 
-**Cosmos** spirals your life out to today, inside a slowly turning star chart. **Ink scroll** is a handscroll drawn live, with brush, splatter and generated koto music. **Basic** is a plain list anyone can read in seconds. Switching keeps your timeline.
+Cosmos spirals your life out to today, inside a slowly turning star chart. Ink scroll and Basic show the same timeline, and both are in beta.
 
 <p align="center">
   <picture>

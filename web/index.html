@@ -1103,6 +1103,8 @@ html,body,button,a,input,label,[data-act],[data-cos],[data-pt],[data-pdraw],[dat
 @keyframes pcall{0%,100%{box-shadow:0 0 0 0 rgba(243,210,122,0)}50%{box-shadow:0 0 0 4px rgba(243,210,122,.18)}}
 @media (prefers-reduced-motion:reduce){.pdraw::before,.padd input:placeholder-shown{animation:none}}
 
+.tplcard .beta{margin-left:6px;padding:2px 7px;border-radius:999px;border:1px solid var(--b-line);font:600 .62rem/1.4 var(--b-sans);font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--b-mute);vertical-align:middle}
+
 </style>
 </head>
 <body>
@@ -1280,7 +1282,7 @@ html,body,button,a,input,label,[data-act],[data-cos],[data-pt],[data-pdraw],[dat
       </div>
       <div class="bwho" id="bWho"></div>
       <ol class="blist" id="bList"></ol>
-      <footer class="bfoot"><p>Same timeline, other looks:</p><div class="brow"><button class="bbtn" type="button" data-tpl="ink">Ink scroll</button><button class="bbtn" type="button" data-tpl="cosmos">Cosmos</button></div></footer>
+      <footer class="bfoot"><div class="brow"><button class="bbtn" type="button" data-tpl="cosmos">Back to Cosmos</button></div></footer>
     </div>
   </section>
 
@@ -1300,9 +1302,9 @@ html,body,button,a,input,label,[data-act],[data-cos],[data-pt],[data-pdraw],[dat
       <div class="mkhead"><h2 id="tpl-h">Choose a template</h2><button class="ghost" type="button" data-act="closeveil">Close</button></div>
       <p class="tplsub">Same timeline, three looks. Switch any time.</p>
       <div class="tplgrid">
-        <button class="tplcard" type="button" data-tpl="basic"><span class="th th-basic" aria-hidden="true"><i></i><i></i><i></i><i></i></span><b>Basic</b><span>Clean and simple. Read it in seconds.</span></button>
-        <button class="tplcard" type="button" data-tpl="ink"><span class="th th-ink" aria-hidden="true"><i></i></span><b>Ink scroll</b><span>A brush stroke you travel along, with music and fortunes.</span></button>
-        <button class="tplcard" type="button" data-tpl="cosmos"><span class="th th-cos" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><b>Cosmos</b><span>Your moments as stars, spiralling out to today.</span></button>
+        <button class="tplcard" type="button" data-tpl="cosmos"><span class="th th-cos" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><b>Cosmos</b><span>Every moment a star.</span></button>
+        <button class="tplcard" type="button" data-tpl="ink"><span class="th th-ink" aria-hidden="true"><i></i></span><b>Ink scroll <em class="beta">Beta</em></b><span>A brush stroke through your life.</span></button>
+        <button class="tplcard" type="button" data-tpl="basic"><span class="th th-basic" aria-hidden="true"><i></i><i></i><i></i><i></i></span><b>Basic <em class="beta">Beta</em></b><span>A plain list.</span></button>
       </div>
     </div>
   </div>

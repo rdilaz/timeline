@@ -169,3 +169,5 @@ html,body,button,a,input,label,[data-act],[data-cos],[data-pt],[data-pdraw],[dat
 .padd input:placeholder-shown{animation:pcall 2.4s ease-in-out infinite}
 @keyframes pcall{0%,100%{box-shadow:0 0 0 0 rgba(243,210,122,0)}50%{box-shadow:0 0 0 4px rgba(243,210,122,.18)}}
 @media (prefers-reduced-motion:reduce){.pdraw::before,.padd input:placeholder-shown{animation:none}}
+
+.tplcard .beta{margin-left:6px;padding:2px 7px;border-radius:999px;border:1px solid var(--b-line);font:600 .62rem/1.4 var(--b-sans);font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--b-mute);vertical-align:middle}
