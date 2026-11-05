@@ -1122,6 +1122,22 @@ html,body,button,a,input,label,[data-act],[data-cos],[data-pt],[data-pdraw],[dat
 @keyframes nudge{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 @media (prefers-reduced-motion:reduce){.th-cos i,.th-ink i,.th-basic i,.tplcard.nudge{animation:none}}
 
+/* opening split: Cosmos, the plain timeline and the Ink preview side by side; stacks on phones */
+.triple{position:fixed;inset:0;z-index:60;display:grid;grid-template-columns:1fr 1.15fr 1fr}
+.triple[hidden]{display:none}
+.tri{position:relative;display:grid;place-content:center;justify-items:center;gap:10px;border:0;margin:0;padding:24px;cursor:pointer;font-family:inherit;overflow:hidden;transition:flex .3s,filter .3s}
+.tri .th{width:170px;height:92px;transform:scale(1.9);margin:70px 0 64px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.tri b{font-size:clamp(28px,3vw,40px);font-weight:600;letter-spacing:-.01em}
+.tri em{font-style:normal;opacity:.75;font-size:16px}
+.tri-cos{background:radial-gradient(80% 60% at 50% 40%,#16204a,#070a17);color:#eef1ff}
+.tri-basic{background:var(--b-bg,#f6f4ef);color:var(--b-ink,#14161c)}
+.tri-ink{background:radial-gradient(80% 60% at 50% 40%,#efe4c9,#d3bf97);color:#2a1d10;cursor:default}
+.tri-ink .th{filter:saturate(.9)}
+.tri:not(.tri-ink):hover{filter:brightness(1.06)}
+.tri:focus-visible{outline:3px solid #f3d27a;outline-offset:-6px}
+.tri.nudge{animation:nudge .4s}
+@media (max-width:760px){.triple{grid-template-columns:1fr;grid-template-rows:1fr 1.15fr 1fr}.tri .th{transform:scale(1.2);margin:18px 0 14px}.tri b{font-size:24px}}
+
 </style>
 </head>
 <body>
@@ -1314,6 +1330,11 @@ html,body,button,a,input,label,[data-act],[data-cos],[data-pt],[data-pdraw],[dat
     <nav class="cnav" aria-label="Move between stars"><button class="bbtn" type="button" data-cos="-1">← Back</button><span id="cCount"></span><button class="bbtn" type="button" data-cos="1">Next →</button></nav>
   </section>
 
+  <div class="triple" id="triple" role="dialog" aria-modal="true" aria-label="Choose a look">
+    <button class="tri tri-cos" type="button" data-tpl="cosmos"><span class="th th-cos" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><b>Cosmos</b><em>Every moment a star.</em></button>
+    <button class="tri tri-basic" type="button" data-tpl="basic"><span class="th th-basic" aria-hidden="true"><i></i><i></i><i></i><i></i></span><b>Timeline</b><em>Your life on one page.</em></button>
+    <button class="tri tri-ink" type="button" data-tpl="ink" aria-disabled="true"><span class="th th-ink" aria-hidden="true"><i></i></span><b>Ink scroll</b><em>Coming soon.</em></button>
+  </div>
   <div class="veil tplveil" id="tplVeil" hidden>
     <div class="sheet tplsheet" role="dialog" aria-modal="true" aria-labelledby="tpl-h">
       <div class="mkhead"><h2 id="tpl-h">Choose a template</h2><button class="ghost" type="button" data-act="closeveil">Close</button></div>
@@ -3097,7 +3118,8 @@ document.addEventListener("input",ev=>{ if(ev.target.id==="mkText"){ MK.draft=ev
 const TPLS=["basic","ink","cosmos"];
 // Ink scroll is Ryo's demo only: unlocked with ?demo or ?ink, never for the public
 const INK_OK=/[?&](demo|ink)\b/.test(location.search);
-if(INK_OK) document.querySelectorAll('.tplcard[data-tpl="ink"]').forEach(c=>{c.classList.remove("soon");c.removeAttribute("aria-disabled");const e=c.querySelector(".beta");if(e)e.textContent="Demo";});
+if(/[?&]demo\b/.test(location.search)){ const tr=document.getElementById("triple"); if(tr) tr.hidden=true; }
+if(INK_OK) document.querySelectorAll('[data-tpl="ink"]').forEach(c=>{c.classList.remove("soon");c.removeAttribute("aria-disabled");const e=c.querySelector(".beta");if(e)e.textContent="Demo";});
 let TPL=store.get("tlpub.tpl","basic"); if(!TPLS.includes(TPL)||(TPL==="ink"&&!INK_OK)) TPL="basic";
 const isExample=()=>events[0]&&events[0].when==="Example scroll";
 const moments=()=>events.filter(e=>e.kind==="event"||e.kind==="today"||e.kind==="ahead");
@@ -3328,7 +3350,7 @@ function cosFx(k){ if(TPL!=="cosmos"||!COS.pts.length) return; const p=COS.pts[C
 /* ---------- picker + controls (capture phase, so the ink scroll's own handler never sees them) ---------- */
 document.addEventListener("click",ev=>{
   const tp=ev.target.closest("[data-tpl]");
-  if(tp){ ev.stopPropagation(); if(tp.dataset.tpl==="ink"&&!INK_OK){ tp.classList.remove("nudge"); void tp.offsetWidth; tp.classList.add("nudge"); return; } $("#tplVeil").hidden=true; setTpl(tp.dataset.tpl); return; }
+  if(tp){ ev.stopPropagation(); if(tp.dataset.tpl==="ink"&&!INK_OK){ if(tp.classList.contains("tri")){ tp.querySelector("em").textContent="Coming soon. Ryo's demo only."; } tp.classList.remove("nudge"); void tp.offsetWidth; tp.classList.add("nudge"); return; } $("#tplVeil").hidden=true; const tr=$("#triple"); if(tr) tr.hidden=true; setTpl(tp.dataset.tpl); return; }
   const cb=ev.target.closest("[data-cos]");
   if(cb){ ev.stopPropagation(); cosSelect(COS.sel+(+cb.dataset.cos)); try{SFX.pluck()}catch(e){} return; }
   const a=ev.target.closest("[data-act]"); if(!a) return;
