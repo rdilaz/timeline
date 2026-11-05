@@ -39,11 +39,12 @@
   </picture>
 </p>
 
-## You choose how much to share
+## Make yours
 
-- **Quiz.** Eight taps, no typing, no AI.
-- **Your apps.** A preview on sample data. Addresses, phone numbers and order numbers are refused before anything is used.
-- **Your words.** Meta Llama 3.2 1B writes your timeline in the browser, on WebGPU. Without WebGPU, a simple writer on the page stands in. Muse by Meta is an opt-in alternative, and you see exactly what would be sent.
+- **Write a few sentences.** Meta Llama 3.2 1B turns them into your timeline in the browser, on WebGPU. Without WebGPU, a simple writer on the page stands in.
+- **Or ask Meta AI.** One tap copies a ready prompt and opens Meta AI. It asks you a few questions, you paste its reply back, and Timeline builds from it.
+
+Open it and Ryo's own life is the example, so there is something to explore before you write a word.
 
 One guard file runs in the browser and on the server. It cuts links, emails, phone numbers, street addresses, ID and card numbers before any model runs, and re-checks every line a model writes.
 
