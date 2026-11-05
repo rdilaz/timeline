@@ -33,11 +33,11 @@ function renderBasic(){
   ms.forEach((e,k)=>{
     if(e.chapter!==prev&&e.kind!=="today"){ html+=`<li class="bch">${esc(CHN[e.chapter]||e.chapter)}</li>`; prev=e.chapter; }
     if(e.kind==="today"){
-      html+=`<li class="bit today" style="--k:${k}"><div class="bcard"><div class="bwhen"><span class="btag">Today</span>${esc(fmtDay(new Date()))}</div><h3>You are here.</h3><p>Everything above has happened. Everything below is a plan.</p></div></li>`;
+      html+=`<li class="bit today" style="--k:${k}"><div class="bcard"><div class="bwhen"><span class="btag">Today</span>${esc(fmtDay(new Date()))}</div><h3>You are here.</h3><p>Everything above has happened. Everything below is a plan.</p>${payList()}</div></li>`;
       return;
     }
     const big=e.splat==="red";
-    html+=`<li class="bit ${e.kind}${big?" big":""}" style="--k:${k}"><div class="bcard"><div class="bwhen">${e.kind==="ahead"?'<span class="btag">Plan</span>':big?'<span class="btag">Big moment</span>':""}${esc(e.when||"")}</div><h3>${esc(e.line)}</h3>${e.detail?`<p>${esc(e.detail)}</p>`:""}</div></li>`;
+    html+=`<li class="bit ${e.kind}${big?" big":""}" style="--k:${k}"><div class="bcard"><div class="bwhen">${e.kind==="ahead"?'<span class="btag">Plan</span>':big?'<span class="btag">Big moment</span>':""}${esc(e.when||"")}</div><h3>${esc(e.line)}</h3>${e.detail?`<p>${esc(e.detail)}</p>`:""}${e.kind==="ahead"?paySlip(e.id):""}</div></li>`;
   });
   const list=$("#bList"); list.innerHTML=html;
   const pct=ti<0?100:Math.round((ti+1)/(ms.length+1)*100); list.style.setProperty("--done",pct+"%");
@@ -99,13 +99,20 @@ function cosDraw(now){
     if(wide||sel){ x.fillStyle=sel?"#f3d27a":"rgba(154,164,199,.9)"; x.font=`600 ${sel?13:11}px "Instrument Sans",system-ui,sans-serif`; x.fillText(today?"Today":(e.when||"").slice(0,22),p.x+r+10,p.y+4); }
   });
 }
-function cosLoop(now){ cosDraw(now); if(TPL==="cosmos"&&!still&&!document.hidden) COS.raf=requestAnimationFrame(cosLoop); }
+function cosFxDraw(x,now){ if(!COS.fx||!COS.fx.length) return;
+  for(const f of COS.fx){ const a=(now-f.t)/1000; if(a<0||a>2.4) continue; const e=1-Math.pow(1-Math.min(1,a/1.2),3);
+    if(f.k==="flare"){ x.strokeStyle=`rgba(255,231,160,${.9*(1-a/2.4)})`; x.lineWidth=2; x.beginPath(); x.arc(f.x,f.y,10+e*90,0,7); x.stroke();
+      for(let k=0;k<14;k++){ const ang=k/14*Math.PI*2+.3, r1=12+e*70, r2=r1+10+e*26; x.strokeStyle=`rgba(255,240,200,${.8*(1-a/2.4)})`; x.lineWidth=1.4; x.beginPath(); x.moveTo(f.x+Math.cos(ang)*r1,f.y+Math.sin(ang)*r1); x.lineTo(f.x+Math.cos(ang)*r2,f.y+Math.sin(ang)*r2); x.stroke(); } }
+    if(f.k==="gold"){ const g=x.createRadialGradient(f.x,f.y,0,f.x,f.y,30+e*60); g.addColorStop(0,`rgba(243,210,122,${.7*(1-a/2.4)})`); g.addColorStop(1,"rgba(243,210,122,0)"); x.fillStyle=g; x.beginPath(); x.arc(f.x,f.y,30+e*60,0,7); x.fill(); x.strokeStyle=`rgba(243,210,122,${1-a/2.4})`; x.lineWidth=2; x.beginPath(); x.arc(f.x,f.y,8+e*22,0,7); x.stroke(); }
+    if(f.k==="dim"){ const j=a<.6?Math.sin(a*60)*4*(1-a/.6):0; x.strokeStyle=`rgba(226,92,84,${.85*(1-a/2.4)})`; x.lineWidth=2; x.beginPath(); x.arc(f.x+j,f.y,10+e*14,0,7); x.stroke(); const g=x.createRadialGradient(f.x,f.y,0,f.x,f.y,60); g.addColorStop(0,`rgba(10,8,20,${.55*(1-a/2.4)})`); g.addColorStop(1,"rgba(10,8,20,0)"); x.fillStyle=g; x.beginPath(); x.arc(f.x,f.y,60,0,7); x.fill(); }
+  } }
+function cosLoop(now){ cosDraw(now); cosFxDraw($("#cosCanvas").getContext("2d"),now); if(TPL==="cosmos"&&!still&&!document.hidden) COS.raf=requestAnimationFrame(cosLoop); }
 function cosStop(){ cancelAnimationFrame(COS.raf); COS.raf=0; }
 function cosSelect(i){
   const P=COS.pts; if(!P.length) return; COS.sel=clamp(i,0,P.length-1); const e=P[COS.sel].e;
   $("#cPanel").innerHTML=e.kind==="today"
-    ?`<div class="cw">Today · ${esc(fmtDay(new Date()))}</div><h3>You are here.</h3><p>The bright star. Everything before it happened; the rings after it are plans.</p>`
-    :`<div class="cw">${esc(e.kind==="ahead"?"Plan · ":"")}${esc(e.when||CHN[e.chapter]||"")}</div><h3>${esc(e.line)}</h3>${e.detail?`<p>${esc(e.detail)}</p>`:""}`;
+    ?`<div class="cw">Today · ${esc(fmtDay(new Date()))}</div><h3>You are here.</h3>${payList()}`
+    :`<div class="cw">${esc(e.kind==="ahead"?"Plan · ":"")}${esc(e.when||CHN[e.chapter]||"")}</div><h3>${esc(e.line)}</h3>${e.detail?`<p>${esc(e.detail)}</p>`:""}${e.kind==="ahead"?paySlip(e.id):""}`;
   $("#cCount").textContent=`${COS.sel+1} of ${P.length}`;
   if(still) cosDraw(0);
 }
@@ -121,6 +128,35 @@ $("#cosCanvas").addEventListener("click",ev=>{
   if(best>=0){ cosSelect(best); try{SFX.pluck()}catch(e){} }
 });
 new ResizeObserver(()=>{ if(TPL==="cosmos"){ cosLayout(); cosDraw(performance.now()); } if(TPL==="basic"){} }).observe($("#tplCosmos"));
+
+
+/* ---------- the payoff, in every template: strike a to-do, read a plan's fortune ---------- */
+const PAY={read:{}};
+const BAD=g=>{const k=(DATA.tiers[g]||{}).key; return k==="kyo"||k==="daikyo";};
+function payList(){ day=loadDay();
+  return `<ol class="plist">${day.map((d,i)=>`<li><button type="button" class="pt${d.x?" x":""}" data-pt="${i}" aria-pressed="${d.x}"><i aria-hidden="true"></i><span>${esc(d.t)}</span></button></li>`).join("")}</ol>
+  <form class="padd" data-padd><input type="text" maxlength="80" placeholder="Add a to-do" aria-label="Add a to-do for today"><button type="submit" class="bbtn">Add</button></form>`; }
+function payDraw(id){
+  const all=(DATA.deck||[]), mine=all.filter(s=>s.toward===id), pool=mine.length?mine:all; if(!pool.length) return null;
+  const W=pool.map(s=>(DATA.tiers[s.grade]||{w:1}).w); let r=Math.random()*W.reduce((a,b)=>a+b,0), k=0; while(k<pool.length-1&&(r-=W[k])>0) k++;
+  return PAY.read[id]=pool[k];
+}
+function paySlip(id){ const s=PAY.read[id]; if(!s) return `<button type="button" class="bbtn pdraw" data-pdraw="${esc(id)}">Read the fortune</button>`;
+  const t=DATA.tiers[s.grade]||{en:""}, bad=BAD(s.grade);
+  return `<div class="pslip ${bad?"bad":"good"}"><div class="pg">${esc(t.en)}</div><p>${esc(s.move)}</p><div class="prow">${s.act&&s.act.kind==="todo"?`<button type="button" class="bbtn" data-pact="${esc(id)}">Add to today</button>`:""}<button type="button" class="bbtn ghost2" data-pdraw="${esc(id)}">Draw again</button></div></div>`; }
+function payRefresh(){ if(TPL==="cosmos") cosSelect(COS.sel); else if(TPL==="basic"){ const sc=$("#bScroll"), y=sc.scrollTop; renderBasic(); sc.scrollTop=y; } }
+document.addEventListener("click",ev=>{
+  const t=ev.target.closest("[data-pt]"), d=ev.target.closest("[data-pdraw]"), a=ev.target.closest("[data-pact]");
+  if(!t&&!d&&!a) return; ev.stopPropagation();
+  if(t){ day=loadDay(); const i=+t.dataset.pt; if(!day[i]) return; day[i].x=!day[i].x; saveDay(); PAY.last={k:"td",i,on:day[i].x}; if(day[i].x) cosFx("flare"); try{SFX.pluck()}catch(e){} }
+  if(d){ const s=payDraw(d.dataset.pdraw); PAY.last={k:"slip",id:d.dataset.pdraw}; if(s) cosFx(BAD(s.grade)?"dim":"gold"); try{SFX.pluck()}catch(e){} }
+  if(a){ const s=PAY.read[a.dataset.pact]; if(s&&s.act) addTodo(s.act.text); PAY.last={k:"add"}; }
+  payRefresh();
+  if(PAY.last&&PAY.last.k==="td"&&PAY.last.on){ const b=document.querySelector(`#tpl${TPL==="cosmos"?"Cosmos":"Basic"} [data-pt="${PAY.last.i}"]`); if(b){ b.classList.add("pop"); b.focus({preventScroll:true}); } }
+  if(PAY.last&&PAY.last.k==="slip"){ const el=document.querySelector(`#tpl${TPL==="cosmos"?"Cosmos":"Basic"} .pslip`); if(el) el.classList.add("in"); }
+},true);
+document.addEventListener("submit",ev=>{ const f=ev.target.closest("[data-padd]"); if(!f) return; ev.preventDefault(); const v=f.querySelector("input").value.trim(); if(!v) return; addTodo(v); payRefresh(); const i=document.querySelector(`#tpl${TPL==="cosmos"?"Cosmos":"Basic"} [data-padd] input`); if(i) i.focus(); },true);
+function cosFx(k){ if(TPL!=="cosmos"||!COS.pts.length) return; const p=COS.pts[COS.sel]; COS.fx=(COS.fx||[]).filter(f=>performance.now()-f.t<3000); COS.fx.push({k,x:p.x,y:p.y,t:performance.now()}); }
 
 /* ---------- picker + controls (capture phase, so the ink scroll's own handler never sees them) ---------- */
 document.addEventListener("click",ev=>{
