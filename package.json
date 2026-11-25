@@ -2,7 +2,7 @@
   "name": "timeline",
   "version": "1.0.0",
   "private": true,
-  "description": "Your life as an ink handscroll. Three ways in, you choose how much you share. Llama runs on your device.",
+  "description": "Your life on one page, in Basic or Cosmos. You choose how much you share. Llama runs on your device.",
   "license": "MIT",
   "engines": { "node": ">=20" },
   "scripts": {
