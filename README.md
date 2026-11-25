@@ -44,7 +44,7 @@ Timeline opens on Basic, a plain list you read in seconds. Cosmos spirals the sa
 - **Take the quiz.** Tap through eight questions. No AI involved, and nothing leaves the device.
 - **Try your apps (beta).** A working preview of building from Calendar, Photos and Mail, on sample data. No account is connected.
 - **Hand it to Meta AI.** Timeline copies a handoff prompt. Paste it into Meta AI, or any AI chat you like. It asks you a few questions, you paste its reply back, and Timeline builds from it.
-- **Or write a few sentences.** Meta Llama 3.2 1B turns them into your timeline right in the browser, on WebGPU. Without WebGPU, a simple writer on the page stands in. If the site owner has switched it on, you can instead send the cleaned text to Muse Spark, Meta's hosted model, through the server; this is opt-in and nothing is stored.
+- **Or write a few sentences.** Meta Llama 3.2 1B turns them into your timeline right in the browser, on WebGPU. Without WebGPU, a simple writer on the page stands in. If the site owner has switched it on, you can instead send the cleaned text to Muse Spark, Meta's hosted model, through this site's server; it's opt-in and the site keeps nothing.
 
 Open it and Ryo's own life is the example, so there is something to explore before you write a word.
 
